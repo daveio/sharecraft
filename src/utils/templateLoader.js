@@ -1,5 +1,5 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from "fs";
+import { join } from "path";
 
 // Cache for loaded templates
 const templateCache = new Map();
@@ -14,8 +14,8 @@ function loadTemplate(templatePath) {
     return templateCache.get(templatePath);
   }
 
-  const fullPath = join(process.cwd(), 'src', 'templates', templatePath);
-  const template = readFileSync(fullPath, 'utf-8');
+  const fullPath = join(process.cwd(), "src", "templates", templatePath);
+  const template = readFileSync(fullPath, "utf-8");
   templateCache.set(templatePath, template);
   return template;
 }
@@ -29,14 +29,14 @@ function loadTemplate(templatePath) {
 function renderTemplate(template, variables = {}) {
   return template.replace(/\{\{([^}]+)\}\}/g, (match, key) => {
     key = key.trim();
-    if (key.startsWith('#if ')) {
+    if (key.startsWith("#if ")) {
       const condition = key.slice(4);
-      return variables[condition] ? '' : 'style="display: none;"';
+      return variables[condition] ? "" : 'style="display: none;"';
     }
-    if (key.startsWith('#each ')) {
+    if (key.startsWith("#each ")) {
       const arrayKey = key.slice(6);
       const array = variables[arrayKey] || [];
-      return array.map(item => renderTemplate(match, item)).join('');
+      return array.map((item) => renderTemplate(match, item)).join("");
     }
     return variables[key] !== undefined ? variables[key] : match;
   });

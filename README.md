@@ -11,7 +11,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - Custom social preview metadata for specific pages
 - Default fallback previews
 - Admin panel for managing previews
-- Support for multiple social platforms (Twitter, Facebook, LinkedIn, etc.)
+- Support for multiple social platforms (X, Facebook, LinkedIn, etc.)
 - Image upload and management
 - Secure authentication
 - Detects social media crawlers
@@ -44,7 +44,7 @@ A web-based dashboard that allows you to:
 
 ## Implementation
 
-This will set up a custom social preview solution for your Notion-hosted blog using Cloudflare services. This solution allows you to intercept social media crawlers and serve custom Open Graph and Twitter card metadata, replacing Notion's generic previews.
+This will set up a custom social preview solution for your Notion-hosted blog using Cloudflare services. This solution allows you to intercept social media crawlers and serve custom Open Graph and X card metadata, replacing Notion's generic previews.
 
 ### Architecture Overview
 
@@ -234,11 +234,12 @@ Ensure your domain is using Cloudflare DNS, and that the worker route is correct
 
 ### How It Works
 
-1. When a social media crawler (like Facebook's, Twitter's, etc.) visits your blog:
+1. When a social media crawler (like Facebook's, X's, etc.) visits your blog:
 
    - The worker detects the crawler via User-Agent header
    - It fetches the corresponding social preview metadata from D1
-   - It modifies the HTML response to include your custom Open Graph and Twitter card tags
+
+- It modifies the HTML response to include your custom Open Graph and X card tags
 
 2. For regular visitors:
 
@@ -277,7 +278,6 @@ For high-traffic sites, consider:
 1. Use social network debug tools to test:
 
    - [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
-   - [Twitter Card Validator](https://cards-dev.twitter.com/validator)
    - [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/)
 
 2. Check the worker logs for errors:
@@ -328,4 +328,3 @@ For issues with:
 - D1 Database: [D1 documentation](https://developers.cloudflare.com/d1/)
 - R2 Storage: [R2 documentation](https://developers.cloudflare.com/r2/)
 - KV: [KV documentation](https://developers.cloudflare.com/kv/)
-

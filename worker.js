@@ -603,10 +603,9 @@ function adminDashboardHtml() {
                 </td>
               </tr>
             `).join('');
-          } catch (error) {
+          } catch (error) 
             console.error('Error loading posts:', error);
             showStatus('Error loading posts. Please try again.', 'error');
-          }
         }
         
         // Delete post

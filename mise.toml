@@ -1,0 +1,8 @@
+[env]
+GENDERBASE_MISE_ACTIVE = 'true'
+
+[settings]
+env_file = '.env'
+
+[tools]
+bun = { version = '1.2.10' }
