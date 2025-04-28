@@ -1,4 +1,4 @@
-import { loginHtml } from "../templates/adminTemplates";
+import { renderHtmlTemplate } from "../utils/templateLoader";
 
 export async function handleAdminLogin(request, env) {
   if (request.method === "POST") {
@@ -26,14 +26,14 @@ export async function handleAdminLogin(request, env) {
         },
       });
     } else {
-      return new Response(loginHtml("Invalid username or password"), {
+      return new Response(renderHtmlTemplate("login.html.hbs", { errorMessage: "Invalid username or password" }), {
         headers: { "Content-Type": "text/html" },
       });
     }
   }
 
   // Show login form
-  return new Response(loginHtml(), {
+  return new Response(renderHtmlTemplate("login.html.hbs"), {
     headers: { "Content-Type": "text/html" },
   });
 }

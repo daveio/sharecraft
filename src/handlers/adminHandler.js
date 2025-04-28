@@ -31,14 +31,14 @@ export async function handleAdminRequest(request, env) {
       pages: await getRecentPages(env),
     };
 
-    return new Response(renderHtmlTemplate("admin/panel.html.hbs", variables), {
+    return new Response(renderHtmlTemplate("panel.html.hbs", variables), {
       headers: { "Content-Type": "text/html" },
     });
   }
 
   // Serve other admin pages
   if (url.pathname === "/admin/add") {
-    return new Response(renderHtmlTemplate("admin/add.html.hbs"), {
+    return new Response(renderHtmlTemplate("add.html.hbs"), {
       headers: { "Content-Type": "text/html" },
     });
   }
@@ -57,7 +57,7 @@ export async function handleAdminRequest(request, env) {
         return Response.redirect("/admin", 302);
       }
 
-      return new Response(renderHtmlTemplate("admin/edit.html.hbs", { post }), {
+      return new Response(renderHtmlTemplate("edit.html.hbs", { post }), {
         headers: { "Content-Type": "text/html" },
       });
     } catch (error) {
