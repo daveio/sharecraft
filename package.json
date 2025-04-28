@@ -1,0 +1,15 @@
+{
+  "name": "sharecraft",
+  "version": "1.0.0",
+  "description": "Sharecraft - A Cloudflare Worker for creating social media previews for blog posts",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "start": "npm run dev"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "wrangler": "^4.13.2"
+  }
+}

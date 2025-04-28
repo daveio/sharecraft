@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Social Preview</title>
+    <style>
+        /* Same styles as add.html */
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1d4ed8;
+            --background-color: #f8fafc;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .button-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .button-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .button-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+
+        .button-secondary:hover {
+            background-color: #d1d5db;
+        }
+
+        .image-preview {
+            margin-top: 1rem;
+            max-width: 300px;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: auto;
+            border-radius: 0.375rem;
+        }
+
+        .error-message {
+            color: #ef4444;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .success-message {
+            color: #10b981;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Edit Social Preview</h1>
+            <a href="/admin" class="button button-secondary">Back to Dashboard</a>
+        </div>
+
+        <form id="editForm">
+            <input type="hidden" id="postId" value="{{post.id}}">
+
+            <div class="form-group">
+                <label class="form-label" for="path">Page Path</label>
+                <input type="text" id="path" name="path" class="form-input" required
+                       value="{{post.path}}">
+                <small>The URL path where this preview should be used</small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="title">Title</label>
+                <input type="text" id="title" name="title" class="form-input" required
+                       value="{{post.title}}">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="description">Description</label>
+                <textarea id="description" name="description" class="form-textarea" rows="3" required>{{post.description}}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="image">Preview Image</label>
+                <input type="file" id="image" name="image" accept="image/*">
+                <div id="imagePreview" class="image-preview">
+                    <img src="{{post.image_url}}" alt="Preview">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <input type="checkbox" id="isDefault" name="is_default" {{#if post.is_default}}checked{{/if}}>
+                    Use as default preview
+                </label>
+                <small>This preview will be used for pages without a specific preview</small>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <a href="/admin" class="button button-secondary">Cancel</a>
+                <button type="submit" class="button button-primary">Update Preview</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('editForm');
+        const imageInput = document.getElementById('image');
+        const imagePreview = document.getElementById('imagePreview');
+        let currentImageUrl = '{{post.image_url}}';
+
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.querySelector('img').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const imageFile = imageInput.files[0];
+            let imageUrl = currentImageUrl;
+
+            try {
+                // Upload new image if one was selected
+                if (imageFile) {
+                    const imageFormData = new FormData();
+                    imageFormData.append('image', imageFile);
+
+                    const uploadResponse = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: imageFormData
+                    });
+
+                    const uploadResult = await uploadResponse.json();
+
+                    if (!uploadResult.success) {
+                        throw new Error(uploadResult.error || 'Failed to upload image');
+                    }
+
+                    imageUrl = uploadResult.url;
+                }
+
+                // Update the preview
+                const previewData = {
+                    id: document.getElementById('postId').value,
+                    path: formData.get('path'),
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    image_url: imageUrl,
+                    is_default: formData.get('is_default') === 'on'
+                };
+
+                const response = await fetch('/api/posts', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(previewData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    window.location.href = '/admin';
+                } else {
+                    throw new Error(result.error || 'Failed to update preview');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
