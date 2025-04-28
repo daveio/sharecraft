@@ -1,5 +1,5 @@
 [env]
-GENDERBASE_MISE_ACTIVE = 'true'
+SHARECRAFT_MISE_ACTIVE = 'true'
 
 [settings]
 env_file = '.env'
