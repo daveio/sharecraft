@@ -527,6 +527,53 @@ return new Response(modifiedHtml, {
 
 ## Troubleshooting & Maintenance
 
+### Known Issues and Solutions
+
+#### Build Loop Issue
+
+**Problem**: When running `bun run build`, the build process enters an infinite loop. This occurs due to a circular reference between the build script and Wrangler's configuration.
+
+**Cause**:
+
+1. The build script (`scripts/build.ts`) calls `bun run wrangler build`
+2. Wrangler's configuration in `wrangler.json` contains a `build` property that runs `bun run build`
+3. This creates a circular dependency that leads to an infinite build loop
+
+**Solution**:
+
+1. Remove the `build` property from `wrangler.json` to break the circular reference
+2. OR modify the build script to use a different command like `wrangler deploy --dry-run --outdir=dist --no-bundle` instead of `wrangler build`
+
+**Fixed build script**:
+
+```typescript
+import { $ } from "bun";
+
+async function runBuild() {
+  try {
+    console.log("🏗️  Bundling templates...");
+    await $`bun run bundle`;
+
+    console.log("📦 Building worker...");
+    // Changed from 'bun run wrangler build' to avoid the infinite loop
+    await $`bun run wrangler deploy --dry-run --outdir=dist --no-bundle`;
+
+    console.log("✅ Build completed successfully!");
+  } catch (error) {
+    console.error("❌ Build failed:", error instanceof Error ? error.message : error);
+    process.exit(1);
+  }
+}
+
+// Handle cleanup on interruption
+process.on("SIGINT", () => {
+  console.log("\n🛑 Build interrupted, cleaning up...");
+  process.exit(0);
+});
+
+await runBuild();
+```
+
 ### Troubleshooting
 
 #### Preview Not Showing Up
