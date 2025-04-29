@@ -18,6 +18,10 @@ runtimes:
 lint:
   ignore:
     - linters:
+        - ALL
+      paths:
+        - worker-configuration.d.ts
+    - linters:
         - prettier
       paths:
         - "**/*.json"

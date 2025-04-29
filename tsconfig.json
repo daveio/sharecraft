@@ -18,7 +18,7 @@
     "strict": true,
     "strictNullChecks": false,
     "target": "es2022",
-    "types": ["@cloudflare/workers-types", "@types/service-worker-mock", "@types/bun", "@types/node"],
+    "types": ["@types/service-worker-mock", "@types/bun", "@types/node"],
     "verbatimModuleSyntax": false
   },
   "exclude": ["node_modules", "dist", "test"],

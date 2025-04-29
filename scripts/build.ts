@@ -6,7 +6,7 @@ async function runBuild() {
     await $`bun run bundle`
 
     console.log("📦 Building worker...")
-    await $`bun run wrangler build`
+    await $`bun run wrangler deploy --dry-run --outdir=dist --no-bundle`
 
     console.log("✅ Build completed successfully!")
   } catch (error) {

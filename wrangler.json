@@ -3,9 +3,6 @@
   "name": "sharecraft",
   "main": "src/index.ts",
   "compatibility_date": "2025-04-29",
-  "build": {
-    "command": "bun run build"
-  },
   "d1_databases": [
     {
       "binding": "DB",
