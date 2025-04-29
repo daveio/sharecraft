@@ -75,7 +75,7 @@ export async function handleImageUploadApi(
   fileName: string
   url: string
 }> {
-  const file = formData.get("image") as File | null
+  const file = formData.get("image") as unknown as File | null
 
   if (!file) {
     throw new Error("No file uploaded")

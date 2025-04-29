@@ -34,7 +34,7 @@ export class TaskCreate extends OpenAPIRoute {
     }
   }
 
-  async handle(c: AppContext) {
+  async handle(_c: AppContext) {
     // Get validated data
     const data = await this.getValidatedData<typeof this.schema>()
 

@@ -37,11 +37,12 @@ export class TaskList extends OpenAPIRoute {
     }
   }
 
-  async handle(c: AppContext) {
+  async handle(_c: AppContext) {
     // Get validated data
     const data = await this.getValidatedData<typeof this.schema>()
 
     // Retrieve the validated parameters
+    // trunk-ignore(biome/lint/correctness/noUnusedVariables)
     const { page, isCompleted } = data.query
 
     // Implement your own object list here
