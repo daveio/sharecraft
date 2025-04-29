@@ -8,12 +8,13 @@ command = "bun run build"
 [[d1_databases]]
 binding = "DB"
 database_name = "social_previews"
-database_id = "your-database-id"
+database_id = ""                  # Get this ID from: wrangler d1 create social_previews
 
 [[r2_buckets]]
 binding = "PREVIEW_IMAGES"
 bucket_name = "preview-images"
+# No ID needed for R2 buckets
 
 [[kv_namespaces]]
 binding = "CONFIG"
-id = "your-kv-namespace-id"
+id = ""            # Get this ID from: wrangler kv:namespace create CONFIG

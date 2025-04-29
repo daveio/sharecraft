@@ -1,14 +1,15 @@
+import Handlebars from "handlebars";
 import { templates } from "./templates";
 
-// Cache for loaded templates
-const templateCache = new Map<string, string>();
+// Cache for compiled templates
+const templateCache = new Map<string, Handlebars.TemplateDelegate>();
 
 /**
- * Load a template from the bundled templates
+ * Load and compile a template from the bundled templates
  * @param templatePath Path to the template relative to templates directory
- * @returns The template content
+ * @returns The compiled template function
  */
-function loadTemplate(templatePath: string): string {
+function loadTemplate(templatePath: string): Handlebars.TemplateDelegate {
   if (templateCache.has(templatePath)) {
     const cachedTemplate = templateCache.get(templatePath);
     if (!cachedTemplate) {
@@ -22,30 +23,9 @@ function loadTemplate(templatePath: string): string {
     throw new Error(`Template ${templatePath} not found`);
   }
 
-  templateCache.set(templatePath, template);
-  return template;
-}
-
-/**
- * Replace handlebars-style variables in a template
- * @param template Template string
- * @param variables Variables to replace
- * @returns Rendered template
- */
-function renderTemplate(template: string, variables: Record<string, unknown> = {}): string {
-  return template.replace(/\{\{([^}]+)\}\}/g, (match, variableKey) => {
-    const trimmedKey = variableKey.trim();
-    if (trimmedKey.startsWith("#if ")) {
-      const condition = trimmedKey.slice(4);
-      return variables[condition] ? "" : 'style="display: none;"';
-    }
-    if (trimmedKey.startsWith("#each ")) {
-      const arrayKey = trimmedKey.slice(6);
-      const array = (variables[arrayKey] as unknown[]) || [];
-      return array.map((item) => renderTemplate(match, item as Record<string, unknown>)).join("");
-    }
-    return variables[trimmedKey] !== undefined ? String(variables[trimmedKey]) : match;
-  });
+  const compiledTemplate = Handlebars.compile(template);
+  templateCache.set(templatePath, compiledTemplate);
+  return compiledTemplate;
 }
 
 /**
@@ -59,5 +39,5 @@ export function renderHtmlTemplate(
   variables: Record<string, unknown> = {}
 ): string {
   const template = loadTemplate(templatePath);
-  return renderTemplate(template, variables);
+  return template(variables);
 }
