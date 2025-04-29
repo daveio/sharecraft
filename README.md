@@ -4,8 +4,6 @@ A Cloudflare Worker that customizes social media preview cards for Notion pages.
 
 ## `.plan`
 
-- Look into using Cloudflare Secrets for the config, if only the password.
-  - Secrets is pretty new.
 - Involve `chanfana` in the project if helpful.
 
 ## Table of Contents
