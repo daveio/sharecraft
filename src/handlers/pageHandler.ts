@@ -1,14 +1,29 @@
+import { Hono } from "hono";
 import type { Env } from "../types";
 import { checkForSocialCrawler } from "../utils/crawlerDetection";
 import { getMetadataForPage } from "../utils/database";
 import { replaceMetaTags } from "../utils/metaTags";
 
-export async function handlePageRequest(request: Request, env: Env): Promise<Response> {
+type PageBindings = {
+  Bindings: Env;
+};
+
+// Create page router
+const pages = new Hono<PageBindings>();
+
+// Handle page requests
+pages.get("*", async (c) => {
+  // Create a new request with the original URL and headers
+  const originalRequest = new Request(c.req.url, {
+    method: c.req.method,
+    headers: new Headers(c.req.raw.headers),
+  });
+
   // Get the original response from Notion
-  const originalResponse = await fetch(request);
+  const originalResponse = await fetch(originalRequest);
 
   // Check if this is a social media crawler
-  const userAgent = request.headers.get("User-Agent") || "";
+  const userAgent = c.req.header("User-Agent") || "";
   const isSocialCrawler = checkForSocialCrawler(userAgent);
 
   // If not a social crawler, return original response
@@ -17,12 +32,11 @@ export async function handlePageRequest(request: Request, env: Env): Promise<Res
   }
 
   // Get the URL path to identify the post
-  const url = new URL(request.url);
-  const path = url.pathname;
+  const path = c.req.path;
 
   try {
     // Get custom metadata for this specific page from D1
-    const metadata = await getMetadataForPage(path, env.DB);
+    const metadata = await getMetadataForPage(path, c.env.DB);
 
     if (!metadata) {
       // No custom metadata found, return original
@@ -41,4 +55,6 @@ export async function handlePageRequest(request: Request, env: Env): Promise<Res
     console.error("Error handling page request:", error);
     return originalResponse;
   }
-}
+});
+
+export { pages };

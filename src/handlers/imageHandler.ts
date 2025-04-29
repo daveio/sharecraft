@@ -1,15 +1,26 @@
+import { Hono } from "hono";
 import type { Env } from "../types";
 
-export async function handleImageRequest(request: Request, env: Env): Promise<Response> {
+type ImageBindings = {
+  Bindings: Env;
+};
+
+// Create image router
+const images = new Hono<ImageBindings>();
+
+// Handle image requests
+images.get("/*", async (c) => {
   try {
-    const url = new URL(request.url);
-    const imagePath = url.pathname.replace("/images/", "");
+    // Get the full path and remove the leading slash
+    const fullPath = c.req.path;
+    // Since we're mounted at /images, we need to handle that in the path
+    const imagePath = fullPath.startsWith("/") ? fullPath.slice(1) : fullPath;
 
     // Get image from R2
-    const object = await env.PREVIEW_IMAGES.get(imagePath);
+    const object = await c.env.PREVIEW_IMAGES.get(imagePath);
 
     if (!object) {
-      return new Response("Image not found", { status: 404 });
+      return c.notFound();
     }
 
     // Get the image data
@@ -25,6 +36,8 @@ export async function handleImageRequest(request: Request, env: Env): Promise<Re
     });
   } catch (error) {
     console.error("Error serving image:", error);
-    return new Response("Error serving image", { status: 500 });
+    return c.text("Error serving image", 500);
   }
-}
+});
+
+export { images };

@@ -45,7 +45,7 @@ api.put("/posts/:id", zValidator("json", UpdatePostSchema), async (c) => {
 
 api.delete("/posts/:id", async (c) => {
   const id = Number.parseInt(c.req.param("id"));
-  await handleDeletePostApi(id, c.env);
+  await handleDeletePostApi({ id }, c.env);
   return c.json({ success: true });
 });
 
