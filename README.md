@@ -9,14 +9,6 @@ A Cloudflare Worker that customizes social media preview cards for Notion pages.
 - Generate a boilerplate worker and see what needs to be merged in
   - `bun x create-cloudflare@latest`
 
-## See also
-
-### [PLAN.md](PLAN.md)
-
-Imminent plans and things I don't want to forget.
-
-A `.plan` file by another name.
-
 ## Table of Contents
 
 1. [Introduction & Features](#introduction--features)
