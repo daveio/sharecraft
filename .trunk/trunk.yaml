@@ -16,9 +16,6 @@ runtimes:
     - python@3.10.8
 # This is the section where you manage your linters. (https://docs.trunk.io/check/configuration)
 lint:
-  disabled:
-    - vale
-    - semgrep
   ignore:
     - linters:
         - prettier
@@ -26,6 +23,8 @@ lint:
         - "**/*.json"
         - "**/*.ts"
   enabled:
+    - semgrep@1.116.0
+    - vale@3.11.2
     - biome@1.9.4
     - dustilock@1.2.0
     - gitleaks@8.24.3
