@@ -2,27 +2,27 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "sharecraft",
   "main": "src/index.ts",
-  "compatibility_date": "2025-04-29",
+  "compatibility_date": "2025-04-28",
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "social_previews",
-      "database_id": "database_id"
-    }
+      "database_id": "database_id",
+    },
   ],
   "r2_buckets": [
     {
       "binding": "PREVIEW_IMAGES",
-      "bucket_name": "preview-images"
-    }
+      "bucket_name": "preview-images",
+    },
   ],
   "kv_namespaces": [
     {
       "binding": "CONFIG",
-      "id": "namespace_id"
-    }
+      "id": "namespace_id",
+    },
   ],
   "observability": {
-    "enabled": true
-  }
+    "enabled": true,
+  },
 }
