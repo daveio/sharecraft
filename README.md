@@ -2,6 +2,13 @@
 
 A Cloudflare Worker that customizes social media preview cards for Notion pages. This worker intercepts requests from social media crawlers and serves custom meta tags for better social sharing previews.
 
+## `.plan`
+
+- Look into using Cloudflare Secrets for the config, if only the password.
+  - Secrets is pretty new.
+- Generate a boilerplate worker and see what needs to be merged in
+  - `bun x create-cloudflare@latest`
+
 ## See also
 
 ### [PLAN.md](PLAN.md)
