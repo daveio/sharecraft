@@ -6,7 +6,9 @@ A Cloudflare Worker that customizes social media preview cards for Notion pages.
 
 ### [PLAN.md](PLAN.md)
 
-Imminent plans and things I don't want to forget. A `.plan` file by another name.
+Imminent plans and things I don't want to forget.
+
+A `.plan` file by another name.
 
 ## Table of Contents
 
