@@ -1137,7 +1137,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ### Example Files Structure
 
-```
+```plaintext
 src/
 ├── index.ts           # Main worker entry point
 ├── api.ts             # API router setup with chanfana
