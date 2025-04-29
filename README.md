@@ -997,3 +997,155 @@ For issues with:
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Integrating Chanfana for OpenAPI Support
+
+[Chanfana](https://github.com/cloudflare/chanfana) is a TypeScript library developed by Cloudflare that enhances Workers by providing automatic OpenAPI 3.1 schema generation and request validation. It's built to work with [Hono](https://github.com/honojs/hono), a lightweight web framework for edge environments.
+
+### What Chanfana Does
+
+- **Automatic OpenAPI Documentation**: Generates OpenAPI 3.1 specs directly from your code
+- **Request Validation**: Validates incoming requests against your defined schemas
+- **Type Safety**: Uses Zod for type validation and schema definition
+- **Integration with Hono**: Seamlessly works with the Hono framework used by your Worker
+
+### Benefits for Sharecraft
+
+1. **API Documentation**: Automatically generate OpenAPI documentation for your admin endpoints
+2. **Input Validation**: Validate request bodies and parameters to prevent errors
+3. **Developer Experience**: Improved type safety and code organization
+4. **Client Generation**: Generate API clients from your OpenAPI specs
+
+### Integration Steps
+
+1. **Install Dependencies**:
+
+   ```bash
+   bun add chanfana hono zod
+   ```
+
+2. **Create an API Router**:
+   Create a new router file (e.g., `src/api.ts`):
+
+   ```typescript
+   import { fromHono } from "chanfana"
+   import { Hono } from "hono"
+   import { PreviewCreate } from "./endpoints/previewCreate"
+   import { PreviewList } from "./endpoints/previewList"
+   import { PreviewDelete } from "./endpoints/previewDelete"
+   // Import more endpoints as needed
+
+   // Create a Hono app for API routes
+   const app = new Hono<{ Bindings: Env }>()
+
+   // Setup OpenAPI registry
+   const openapi = fromHono(app, {
+     docs_url: "/api/docs",
+     title: "Sharecraft API",
+     version: "1.0.0",
+     description: "API for managing Notion social preview cards"
+   })
+
+   // Register OpenAPI endpoints
+   openapi.get("/api/previews", PreviewList)
+   openapi.post("/api/previews", PreviewCreate)
+   openapi.delete("/api/previews/:previewId", PreviewDelete)
+   // Add more routes as needed
+
+   export default app
+   ```
+
+3. **Create Endpoint Definitions**:
+   For each endpoint, create a file in `/src/endpoints/` folder:
+
+   Example for `PreviewList.ts`:
+
+   ```typescript
+   import { Bool, Num, OpenAPIRoute } from "chanfana"
+   import { z } from "zod"
+   import { type AppContext, Preview } from "../types"
+
+   export class PreviewList extends OpenAPIRoute {
+     schema = {
+       tags: ["Previews"],
+       summary: "List Social Previews",
+       request: {
+         query: z.object({
+           page: Num({
+             description: "Page number",
+             default: 0
+           })
+         })
+       },
+       responses: {
+         "200": {
+           description: "Returns a list of social previews",
+           content: {
+             "application/json": {
+               schema: z.object({
+                 success: Bool(),
+                 previews: Preview.array()
+               })
+             }
+           }
+         }
+       }
+     }
+
+     async handle(c: AppContext) {
+       // Implementation to list previews from D1
+       const data = await this.getValidatedData<typeof this.schema>()
+       const { page } = data.query
+
+       // Your implementation here
+     }
+   }
+   ```
+
+4. **Define Types**:
+   Create a `types.ts` file:
+
+   ```typescript
+   import { z } from "zod"
+   import { Context } from "hono"
+
+   export const Preview = z.object({
+     id: z.number().optional(),
+     path: z.string(),
+     title: z.string(),
+     description: z.string(),
+     image_url: z.string(),
+     is_default: z.boolean().default(false)
+   })
+
+   export type Preview = z.infer<typeof Preview>
+   export type AppContext = Context<{ Bindings: Env }>
+   ```
+
+5. **Integrate with Main Worker**:
+   Update your main worker file to include the API router:
+
+   ```typescript
+   import apiRouter from "./api"
+
+   // In your worker setup
+   app.route("/", apiRouter)
+   ```
+
+6. **Access the Documentation**:
+   Once deployed, you can access your API documentation at `/api/docs`.
+
+### Example Files Structure
+
+```
+src/
+├── index.ts           # Main worker entry point
+├── api.ts             # API router setup with chanfana
+├── types.ts           # Shared types and schemas
+└── endpoints/
+    ├── PreviewList.ts
+    ├── PreviewCreate.ts
+    └── PreviewDelete.ts
+```
+
+For more details, refer to the [Chanfana documentation](https://chanfana.pages.dev/) and [Hono documentation](https://hono.dev/docs).
