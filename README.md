@@ -4,7 +4,7 @@ A Cloudflare Worker that customizes social media preview cards for Notion pages.
 
 ## See also
 
-[TODO.md](TODO.md) - imminent plans and things I don't want to forget.
+[PLAN.md](PLAN.md) - imminent plans and things I don't want to forget. A .plan file by another name.
 
 ## Table of Contents
 
