@@ -1,4 +1,7 @@
+import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
 import { checkAuth } from "../middleware/auth";
+import { type AuthStatus, CreatePostSchema, UpdatePostSchema } from "../schemas";
 import type { Env } from "../types";
 import {
   handleCreatePostApi,
@@ -8,42 +11,50 @@ import {
   handleUpdatePostApi,
 } from "../utils/apiUtils";
 
-export async function handleApiRequest(request: Request, env: Env): Promise<Response> {
-  const url = new URL(request.url);
+type ApiBindings = {
+  Bindings: Env;
+  Variables: {
+    authStatus: AuthStatus;
+  };
+};
 
-  // Check if logged in for API requests
-  const authStatus = await checkAuth(request, env);
-  if (!authStatus.authenticated) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
+// Create API router
+const api = new Hono<ApiBindings>();
 
-  // API endpoints
-  if (url.pathname === "/api/posts" && request.method === "GET") {
-    return handleGetPostsApi(env);
-  }
+// Apply auth middleware to all routes
+api.use("*", checkAuth);
 
-  if (url.pathname === "/api/posts" && request.method === "POST") {
-    return handleCreatePostApi(request, env);
-  }
+// Posts endpoints
+api.get("/posts", async (c) => {
+  const posts = await handleGetPostsApi(c.env);
+  return c.json(posts);
+});
 
-  if (url.pathname === "/api/posts" && request.method === "PUT") {
-    return handleUpdatePostApi(request, env);
-  }
+api.post("/posts", zValidator("json", CreatePostSchema), async (c) => {
+  const data = await c.req.json();
+  const post = await handleCreatePostApi(data, c.env);
+  return c.json(post, 201);
+});
 
-  if (url.pathname === "/api/posts" && request.method === "DELETE") {
-    return handleDeletePostApi(request, env);
-  }
+api.put("/posts/:id", zValidator("json", UpdatePostSchema), async (c) => {
+  const id = Number.parseInt(c.req.param("id"));
+  const data = await c.req.json();
+  const post = await handleUpdatePostApi(id, data, c.env);
+  return c.json(post);
+});
 
-  if (url.pathname === "/api/upload" && request.method === "POST") {
-    return handleImageUploadApi(request, env);
-  }
+api.delete("/posts/:id", async (c) => {
+  const id = Number.parseInt(c.req.param("id"));
+  await handleDeletePostApi(id, c.env);
+  return c.json({ success: true });
+});
 
-  // Default 404 for API routes
-  return new Response(JSON.stringify({ error: "Not found" }), {
-    status: 404,
-    headers: { "Content-Type": "application/json" },
-  });
-}
+// Image upload endpoint
+api.post("/upload", async (c) => {
+  const formData = await c.req.formData();
+  const host = c.req.header("host") || "";
+  const result = await handleImageUploadApi(formData, c.env, host);
+  return c.json(result);
+});
+
+export { api };
