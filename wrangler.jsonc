@@ -5,21 +5,21 @@
   "compatibility_date": "2025-04-28",
   "d1_databases": [
     {
-      "binding": "DB",
-      "database_name": "social_previews",
-      "database_id": "database_id"
+      "binding": "D1_PREVIEWS",
+      "database_name": "sharecraft-data-previews",
+      "database_id": "sharecraft-data"
     }
   ],
   "r2_buckets": [
     {
-      "binding": "PREVIEW_IMAGES",
-      "bucket_name": "preview-images"
+      "binding": "R2_IMAGES",
+      "bucket_name": "sharecraft-images"
     }
   ],
   "kv_namespaces": [
     {
-      "binding": "CONFIG",
-      "id": "namespace_id"
+      "binding": "KV_CONFIG",
+      "id": "sharecraft-config"
     }
   ],
   "observability": {

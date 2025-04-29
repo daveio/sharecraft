@@ -98,33 +98,40 @@ Take note of the namespace ID from the output.
 
 #### 2. Configure wrangler.toml
 
-Create a `wrangler.toml` file in your project root:
+Create a `wrangler.jsonc` file in your project root:
 
-```toml
-name = "notion-social-preview"
-main = "src/index.js"
-compatibility_date = "2023-05-01"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "social_previews"
-database_id = "YOUR_DATABASE_ID_HERE"
-
-[[r2_buckets]]
-binding = "PREVIEW_IMAGES"
-bucket_name = "preview-images"
-
-[[kv_namespaces]]
-binding = "CONFIG"
-id = "YOUR_KV_NAMESPACE_ID_HERE"
-
-# Routes
-[routes]
-pattern = "yourdomain.com/*"
-zone_name = "yourdomain.com"
+```jsonc
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sharecraft",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-04-28",
+  "d1_databases": [
+    {
+      "binding": "D1_PREVIEWS",
+      "database_name": "sharecraft-data-previews",
+      "database_id": "sharecraft-data"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2_IMAGES",
+      "bucket_name": "sharecraft-images"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "KV_CONFIG",
+      "id": "sharecraft-config"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
 ```
 
-Replace the placeholders with your actual database ID, KV namespace ID, and domain name.
+Replace the database_id with your actual D1 database ID if different.
 
 #### 3. Initialize the Database
 
@@ -139,7 +146,7 @@ Put the D1 migration script in `migrations/init.sql`.
 Run the migration:
 
 ```bash
-npx wrangler d1 execute social_previews --file=./migrations/init.sql
+npx wrangler d1 execute sharecraft-data-previews --file=./migrations/init.sql
 ```
 
 The following SQL schema will be used:
@@ -183,19 +190,19 @@ bun -e "const g=n=>[...Array(n)].map(_=>('0z\$'[Math.random()*3|0]+String.fromCh
 Set the admin username:
 
 ```sh
-npx wrangler kv:key put --binding=CONFIG "admin_username" "admin" --namespace-id=YOUR_NAMESPACE_ID
+npx wrangler kv:key put --binding=KV_CONFIG "admin_username" "admin" --namespace-id=sharecraft-config
 ```
 
 Set the admin password using the password you generated earlier:
 
 ```sh
-npx wrangler kv:key put --binding=CONFIG "admin_password" "YOUR_PASSWORD" --namespace-id=YOUR_NAMESPACE_ID
+npx wrangler kv:key put --binding=KV_CONFIG "admin_password" "YOUR_PASSWORD" --namespace-id=sharecraft-config
 ```
 
 Set your site domain:
 
 ```sh
-npx wrangler kv:key put --binding=CONFIG "site_domain" "yourdomain.com" --namespace-id=YOUR_NAMESPACE_ID
+npx wrangler kv:key put --binding=KV_CONFIG "site_domain" "yourdomain.com" --namespace-id=sharecraft-config
 ```
 
 Generated password (keep this secure!):
@@ -319,23 +326,24 @@ flowchart LR
 
 1. **D1 Database**
 
-- Stores preview metadata:
-  - Page paths
-  - Custom titles
-  - Descriptions
-  - Image URLs
-  - Default settings
+The worker uses a D1 database with the binding `D1_PREVIEWS` to store preview metadata:
+
+- Page paths
+- Custom titles
+- Descriptions
+- Image URLs
+- Default settings
 - Handles relationships and queries
 
 2. **R2 Storage**
 
-- Stores preview images
+- Uses an R2 bucket with the binding `R2_IMAGES` to store preview images
 - Provides fast edge access
 - Handles image versioning
 
 3. **KV Namespace**
 
-- Stores configuration:
+- Uses a KV namespace with the binding `KV_CONFIG` to store configuration:
   - Admin credentials
   - Site settings
   - Session data
@@ -449,7 +457,7 @@ const originalText = await originalResponse.text()
 3. **Metadata Integration**
 
 ```typescript
-const metadata = await getMetadataForPage(path, env.DB)
+const metadata = await getMetadataForPage(path, env.D1_PREVIEWS)
 const modifiedHtml = replaceMetaTags(originalText, metadata)
 ```
 
@@ -612,7 +620,7 @@ If you can't log in to the admin panel:
 Periodically back up your D1 database:
 
 ```bash
-npx wrangler d1 backup social_previews ./backup.sql
+npx wrangler d1 backup sharecraft-data-previews ./backup.sql
 ```
 
 #### Monitoring Usage
@@ -693,20 +701,27 @@ npx wrangler domains add your-domain.com
 
 1. **Worker Bindings**
 
-```toml
-# In wrangler.toml
-[[d1_databases]]
-binding = "DB"
-database_name = "social_previews"
-database_id = "YOUR_DB_ID"
-
-[[r2_buckets]]
-binding = "PREVIEW_IMAGES"
-bucket_name = "preview-images"
-
-[[kv_namespaces]]
-binding = "CONFIG"
-id = "YOUR_KV_ID"
+```jsonc
+// In wrangler.jsonc
+"d1_databases": [
+  {
+    "binding": "D1_PREVIEWS",
+    "database_name": "sharecraft-data-previews",
+    "database_id": "sharecraft-data"
+  }
+],
+"r2_buckets": [
+  {
+    "binding": "R2_IMAGES",
+    "bucket_name": "sharecraft-images"
+  }
+],
+"kv_namespaces": [
+  {
+    "binding": "KV_CONFIG",
+    "id": "sharecraft-config"
+  }
+]
 ```
 
 2. **Environment Variables**
