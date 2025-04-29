@@ -21,6 +21,6 @@
     "types": ["@cloudflare/workers-types", "@types/service-worker-mock", "@types/bun", "@types/node"],
     "verbatimModuleSyntax": false
   },
-  "exclude": ["node_modules", "dist", "tests"],
+  "exclude": ["node_modules", "dist", "test"],
   "include": ["src", "scripts", "worker-configuration.d.ts"]
 }

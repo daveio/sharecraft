@@ -6,8 +6,7 @@ A Cloudflare Worker that customizes social media preview cards for Notion pages.
 
 - Look into using Cloudflare Secrets for the config, if only the password.
   - Secrets is pretty new.
-- Generate a boilerplate worker and see what needs to be merged in
-  - `bun x create-cloudflare@latest`
+- Involve `chanfana` in the project if helpful.
 
 ## Table of Contents
 
