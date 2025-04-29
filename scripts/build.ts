@@ -1,37 +1,24 @@
-import { readFile, readdir, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { $ } from "bun";
 
-async function buildTemplates() {
-  // Create templates object
-  const templates: Record<string, string> = {};
-  const templatesDir = join(import.meta.dir, "..", "src", "templates");
-
+async function runBuild() {
   try {
-    // Read all .hbs files from templates directory
-    const files = await readdir(templatesDir);
-    const hbsFiles = files.filter((file) => file.endsWith(".hbs"));
+    console.log("🏗️  Bundling templates...");
+    await $`bun run bundle`;
 
-    // Read each template file
-    await Promise.all(
-      hbsFiles.map(async (file) => {
-        const content = await readFile(join(templatesDir, file), "utf-8");
-        templates[file] = content;
-      })
-    );
+    console.log("📦 Building worker...");
+    await $`bun run wrangler build`;
 
-    // Create templates.ts in src/utils
-    const outputFile = join(import.meta.dir, "..", "src", "utils", "templates.ts");
-    const templateContent = `// This file is auto-generated. Do not edit manually.
-export const templates: Record<string, string> = ${JSON.stringify(templates, null, 2)};
-`;
-
-    await writeFile(outputFile, templateContent);
-    console.log("Templates bundled successfully!");
+    console.log("✅ Build completed successfully!");
   } catch (error) {
-    console.error("Error bundling templates:", error);
+    console.error("❌ Build failed:", error instanceof Error ? error.message : error);
     process.exit(1);
   }
 }
 
-// Run the build script
-buildTemplates();
+// Handle cleanup on interruption
+process.on("SIGINT", () => {
+  console.log("\n🛑 Build interrupted, cleaning up...");
+  process.exit(0);
+});
+
+await runBuild();
