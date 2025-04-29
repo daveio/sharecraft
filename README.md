@@ -2,6 +2,10 @@
 
 A Cloudflare Worker that customizes social media preview cards for Notion pages. This worker intercepts requests from social media crawlers and serves custom meta tags for better social sharing previews.
 
+## See also
+
+[TODO.md](TODO.md) - imminent plans and things I don't want to forget.
+
 ## Table of Contents
 
 1. [Introduction & Features](#introduction--features)
