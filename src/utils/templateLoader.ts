@@ -1,8 +1,8 @@
-import Handlebars from "handlebars";
-import { templates } from "./templates";
+import Handlebars from "handlebars"
+import { templates } from "./templates"
 
 // Cache for compiled templates
-const templateCache = new Map<string, Handlebars.TemplateDelegate>();
+const templateCache = new Map<string, Handlebars.TemplateDelegate>()
 
 /**
  * Load and compile a template from the bundled templates
@@ -11,21 +11,21 @@ const templateCache = new Map<string, Handlebars.TemplateDelegate>();
  */
 function loadTemplate(templatePath: string): Handlebars.TemplateDelegate {
   if (templateCache.has(templatePath)) {
-    const cachedTemplate = templateCache.get(templatePath);
+    const cachedTemplate = templateCache.get(templatePath)
     if (!cachedTemplate) {
-      throw new Error(`Template ${templatePath} not found in cache`);
+      throw new Error(`Template ${templatePath} not found in cache`)
     }
-    return cachedTemplate;
+    return cachedTemplate
   }
 
-  const template = templates[templatePath];
+  const template = templates[templatePath]
   if (!template) {
-    throw new Error(`Template ${templatePath} not found`);
+    throw new Error(`Template ${templatePath} not found`)
   }
 
-  const compiledTemplate = Handlebars.compile(template);
-  templateCache.set(templatePath, compiledTemplate);
-  return compiledTemplate;
+  const compiledTemplate = Handlebars.compile(template)
+  templateCache.set(templatePath, compiledTemplate)
+  return compiledTemplate
 }
 
 /**
@@ -34,10 +34,7 @@ function loadTemplate(templatePath: string): Handlebars.TemplateDelegate {
  * @param variables Variables to replace in the template
  * @returns Rendered template
  */
-export function renderHtmlTemplate(
-  templatePath: string,
-  variables: Record<string, unknown> = {}
-): string {
-  const template = loadTemplate(templatePath);
-  return template(variables);
+export function renderHtmlTemplate(templatePath: string, variables: Record<string, unknown> = {}): string {
+  const template = loadTemplate(templatePath)
+  return template(variables)
 }

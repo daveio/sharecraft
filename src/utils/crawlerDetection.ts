@@ -10,8 +10,8 @@ export function checkForSocialCrawler(userAgent: string): boolean {
     "discord",
     "Discordbot",
     "Pinterest",
-    "Googlebot",
-  ];
+    "Googlebot"
+  ]
 
-  return socialCrawlers.some((crawler) => userAgent.toLowerCase().includes(crawler.toLowerCase()));
+  return socialCrawlers.some((crawler) => userAgent.toLowerCase().includes(crawler.toLowerCase()))
 }

@@ -22,9 +22,9 @@
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "single",
+      "quoteStyle": "double",
       "semicolons": "asNeeded",
-      "trailingCommas": "none"
+      "trailingComma": "none"
     }
   },
   "json": {
@@ -34,7 +34,16 @@
     }
   },
   "linter": {
-    "enabled": true
+    "enabled": true,
+    "rules": {
+      "correctness": {
+        "noUnusedVariables": "error"
+      },
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "error"
+      }
+    }
   },
   "organizeImports": {
     "enabled": true
