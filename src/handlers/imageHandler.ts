@@ -17,7 +17,7 @@ images.get("/*", async (c) => {
     const imagePath = fullPath.startsWith("/") ? fullPath.slice(1) : fullPath
 
     // Get image from R2
-    const object = await c.env.PREVIEW_IMAGES.get(imagePath)
+    const object = await c.env.R2_IMAGES.get(imagePath)
 
     if (!object) {
       return c.notFound()

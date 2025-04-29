@@ -19,7 +19,7 @@ export const checkAuth: MiddlewareHandler<AuthBindings> = async (c: Context<Auth
   }
 
   // Verify token from KV store
-  const userJson = await c.env.CONFIG.get(`user:${authToken}`)
+  const userJson = await c.env.KV_CONFIG.get(`user:${authToken}`)
   if (!userJson) {
     throw new HTTPException(401, { message: "Unauthorized" })
   }

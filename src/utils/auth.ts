@@ -7,16 +7,16 @@ export async function handleAdminLogin(request: Request, env: Env): Promise<Resp
     const username = formData.get("username")
     const password = formData.get("password")
 
-    // Get stored credentials from KV
-    const storedUsername = await env.CONFIG.get("admin_username")
-    const storedPassword = await env.CONFIG.get("admin_password")
+    // Get username from KV and password from Secret
+    const storedUsername = await env.KV_CONFIG.get("admin_username")
+    const storedPassword = env.SC_SHARECRAFT_ADMIN // Get password from Cloudflare Secret
 
     if (username === storedUsername && password === storedPassword) {
       // Generate a session token
       const sessionToken = crypto.randomUUID()
 
       // Store in KV with expiration (24 hours)
-      await env.CONFIG.put(`session_${sessionToken}`, "valid", { expirationTtl: 86400 })
+      await env.KV_CONFIG.put(`session_${sessionToken}`, "valid", { expirationTtl: 86400 })
 
       // Return a response with session cookie
       return new Response("Login successful, redirecting...", {
@@ -48,7 +48,7 @@ export async function checkAuth(request: Request, env: Env): Promise<{ authentic
   }
 
   const sessionToken = sessionMatch[1]
-  const sessionValid = await env.CONFIG.get(`session_${sessionToken}`)
+  const sessionValid = await env.KV_CONFIG.get(`session_${sessionToken}`)
 
   return { authenticated: sessionValid === "valid" }
 }

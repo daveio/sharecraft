@@ -32,8 +32,10 @@ admin.use("*", checkAuth)
 // Serve admin dashboard
 admin.get("/", async (c) => {
   // Get stats for the dashboard
-  const totalPagesStmt = await c.env.DB.prepare("SELECT COUNT(*) as count FROM social_previews").first<PageStats>()
-  const customPreviewsStmt = await c.env.DB.prepare(
+  const totalPagesStmt = await c.env.D1_PREVIEWS.prepare(
+    "SELECT COUNT(*) as count FROM social_previews"
+  ).first<PageStats>()
+  const customPreviewsStmt = await c.env.D1_PREVIEWS.prepare(
     "SELECT COUNT(*) as count FROM social_previews WHERE is_default = 0"
   ).first<PageStats>()
 
@@ -64,7 +66,7 @@ admin.get("/edit", async (c) => {
   }
 
   try {
-    const stmt = c.env.DB.prepare("SELECT * FROM social_previews WHERE id = ?")
+    const stmt = c.env.D1_PREVIEWS.prepare("SELECT * FROM social_previews WHERE id = ?")
     const post = await stmt.bind(id).first()
 
     if (!post) {
@@ -81,7 +83,7 @@ admin.get("/edit", async (c) => {
 })
 
 async function getRecentPages(env: Env): Promise<RecentPage[]> {
-  const stmt = env.DB.prepare(`
+  const stmt = env.D1_PREVIEWS.prepare(`
     SELECT path as url,
            CASE WHEN is_default = 1 THEN 'Default' ELSE 'Custom' END as previewType,
            updated_at as lastModified

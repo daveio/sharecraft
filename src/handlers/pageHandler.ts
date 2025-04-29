@@ -36,7 +36,7 @@ pages.get("*", async (c) => {
 
   try {
     // Get custom metadata for this specific page from D1
-    const metadata = await getMetadataForPage(path, c.env.DB)
+    const metadata = await getMetadataForPage(path, c.env.D1_PREVIEWS)
 
     if (!metadata) {
       // No custom metadata found, return original

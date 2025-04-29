@@ -65,19 +65,19 @@ This solution uses:
 First, install the Wrangler CLI:
 
 ```bash
-npm install
+bun install
 ```
 
 Then login to your Cloudflare account:
 
 ```bash
-npx wrangler login
+bun x wrangler login
 ```
 
 ##### Create D1 Database
 
 ```bash
-npx wrangler d1 create social_previews
+bun x wrangler d1 create social_previews
 ```
 
 Take note of the database ID from the output.
@@ -85,13 +85,13 @@ Take note of the database ID from the output.
 ##### Create R2 Bucket
 
 ```bash
-npx wrangler r2 bucket create preview-images
+bun x wrangler r2 bucket create preview-images
 ```
 
 ##### Create KV Namespace
 
 ```bash
-npx wrangler kv:namespace create CONFIG
+bun x wrangler kv:namespace create CONFIG
 ```
 
 Take note of the namespace ID from the output.
@@ -146,7 +146,7 @@ Put the D1 migration script in `migrations/init.sql`.
 Run the migration:
 
 ```bash
-npx wrangler d1 execute sharecraft-data-previews --file=./migrations/init.sql
+bun x wrangler d1 execute sharecraft-data-previews --file=./migrations/init.sql
 ```
 
 The following SQL schema will be used:
@@ -164,13 +164,17 @@ CREATE TABLE social_previews (
 
 #### 4. Set Up KV Values
 
-Generate a random password. You can use this script or generate your own.
+Set the admin username:
 
-JavaScript version:
+```sh
+bun x wrangler kv:key put --binding=KV_CONFIG "admin_username" "admin" --namespace-id=sharecraft-config
+```
+
+Set the admin password using Cloudflare Secret. You can generate a secure password using the following code:
 
 ```javascript
 function generateSecurePassword(length = 32) {
-  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  const charset = "!#%*+,-.=@_~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
   let password = ""
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length)
@@ -181,34 +185,22 @@ function generateSecurePassword(length = 32) {
 console.log(generateSecurePassword(32))
 ```
 
-Shell oneliner using [`**oven-sh/bun**`](https://github.com/oven-sh/bun) - you can use `node -e` if you're boring:
+On macOS, you can copy the code to your clipboard, and simply run:
 
 ```sh
-bun -e "const g=n=>[...Array(n)].map(_=>('0z\$'[Math.random()*3|0]+String.fromCharCode(48+Math.random()*75|0)).slice(-1)).join('');console.log(g(32))"
+pbpaste | bun -
 ```
 
-Set the admin username:
+Then, set it as a secret.
 
 ```sh
-npx wrangler kv:key put --binding=KV_CONFIG "admin_username" "admin" --namespace-id=sharecraft-config
-```
-
-Set the admin password using the password you generated earlier:
-
-```sh
-npx wrangler kv:key put --binding=KV_CONFIG "admin_password" "YOUR_PASSWORD" --namespace-id=sharecraft-config
+bun x wrangler secret put SC_SHARECRAFT_ADMIN
 ```
 
 Set your site domain:
 
 ```sh
-npx wrangler kv:key put --binding=KV_CONFIG "site_domain" "yourdomain.com" --namespace-id=sharecraft-config
-```
-
-Generated password (keep this secure!):
-
-```sh
-VFwGvc4x2L0JuNjLgEeBc4JAjlQQTzI9
+bun x wrangler kv:key put --binding=KV_CONFIG "site_domain" "yourdomain.com" --namespace-id=sharecraft-config
 ```
 
 #### 5. Create Worker Code
@@ -226,7 +218,7 @@ Put the main worker code from the `worker-complete` artifact in `src/index.js`.
 Deploy the worker to Cloudflare:
 
 ```bash
-npx wrangler deploy # maybe `npm run deploy`?
+bun x wrangler deploy
 ```
 
 #### 7. Configure DNS and Routes
@@ -594,7 +586,7 @@ await runBuild()
 2. Check the worker logs for errors:
 
 ```bash
-npx wrangler tail
+bun x wrangler tail
 ```
 
 3. Verify that the path in your configuration matches exactly with your blog's URL path.
@@ -620,7 +612,7 @@ If you can't log in to the admin panel:
 Periodically back up your D1 database:
 
 ```bash
-npx wrangler d1 backup sharecraft-data-previews ./backup.sql
+bun x wrangler d1 backup sharecraft-data-previews ./backup.sql
 ```
 
 #### Monitoring Usage
@@ -693,8 +685,8 @@ your-domain.com/docs/*         # Only documentation
 
 ```bash
 # Add custom domain to worker
-npx wrangler publish --config wrangler.toml
-npx wrangler domains add your-domain.com
+bun x wrangler publish --config wrangler.toml
+bun x wrangler domains add your-domain.com
 ```
 
 #### 3. Environment Setup
@@ -728,8 +720,8 @@ npx wrangler domains add your-domain.com
 
 ```bash
 # Set required environment variables
-npx wrangler secret put SITE_DOMAIN
-npx wrangler secret put ADMIN_EMAIL
+bun x wrangler secret put SITE_DOMAIN
+bun x wrangler secret put ADMIN_EMAIL
 ```
 
 #### 4. Traffic Management
@@ -762,20 +754,20 @@ sequenceDiagram
 
 ```bash
 # Deploy to production
-npx wrangler deploy
+bun x wrangler deploy
 
 # Verify routes
-npx wrangler tail
+bun x wrangler tail
 ```
 
 2. **Testing Configuration**
 
 ```bash
 # Test worker locally
-npx wrangler dev
+bun x wrangler dev
 
 # Test with custom domain
-npx wrangler dev --local-protocol https
+bun x wrangler dev --local-protocol https
 ```
 
 #### 6. Monitoring Integration
@@ -790,7 +782,7 @@ npx wrangler dev --local-protocol https
 
 ```bash
 # Monitor worker health
-npx wrangler tail --format=json
+bun x wrangler tail --format=json
 ```
 
 #### 7. Security Configuration
@@ -830,6 +822,66 @@ Common issues and solutions:
 - Validate SSL/TLS mode
 - Check certificate status
 - Verify HTTPS redirect settings
+
+### Using Cloudflare Secrets for Password Storage
+
+To enhance security, the application uses Cloudflare Secrets to store sensitive information like the admin password instead of KV storage. Here's how it was implemented:
+
+#### 1. Environment Type Updates
+
+The `Env` interface in `src/types.ts` was updated to include the secret:
+
+```typescript
+export interface Env {
+  DB: D1Database
+  PREVIEW_IMAGES: R2Bucket
+  CONFIG: KVNamespace
+  SC_SHARECRAFT_ADMIN: string // Cloudflare Secret for admin password
+}
+```
+
+#### 2. Authentication Logic Changes
+
+The authentication logic in `src/utils/auth.ts` was modified to use the secret for password verification:
+
+```typescript
+// Before: Password from KV
+const storedPassword = await env.KV_CONFIG.get("admin_password")
+
+// After: Password from Secret
+const storedPassword = env.SC_SHARECRAFT_ADMIN
+```
+
+#### 3. Setting Up the Secret
+
+Unlike KV values, Cloudflare Secrets don't need to be defined in the `wrangler.jsonc` file. Instead, they're managed using the Wrangler CLI:
+
+```sh
+# Set the admin password secret
+bun x wrangler secret put SC_SHARECRAFT_ADMIN
+# When prompted, enter your secure password
+```
+
+#### 4. Benefits of Using Secrets
+
+- **Enhanced Security**: Secrets are encrypted at rest and in transit
+- **Access Control**: Secrets have more granular access controls than KV
+- **Auditing**: Secret access can be monitored and audited
+- **No Accidental Exposure**: Secrets aren't exposed in logs or error messages
+- **Simpler Access**: Direct access via the environment variable without async calls
+
+#### 5. Secret vs. KV Storage
+
+| Feature    | Secrets                  | KV Storage                  |
+| ---------- | ------------------------ | --------------------------- |
+| Encryption | End-to-end encrypted     | Encrypted at rest           |
+| Access     | Direct via env variables | Requires async API calls    |
+| Cost       | Free                     | Storage limits apply        |
+| Size limit | 1KB per secret           | 25MB per value              |
+| Visibility | Never exposed in logs    | Can appear in logs          |
+| Use case   | Credentials, API keys    | Configuration, session data |
+
+By moving the admin password to Cloudflare Secrets, we've improved the security posture of the application while keeping non-sensitive configuration in KV for easy access and updates.
 
 ### Worker's Role in Request Chain
 

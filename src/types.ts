@@ -1,9 +1,10 @@
-/// <reference types="@cloudflare/workers-types" />
+/// <reference path="../worker-configuration.d.ts" />
 
 export interface Env {
-  DB: D1Database
-  PREVIEW_IMAGES: R2Bucket
-  CONFIG: KVNamespace
+  D1_PREVIEWS: D1Database
+  R2_IMAGES: R2Bucket
+  KV_CONFIG: KVNamespace
+  SC_SHARECRAFT_ADMIN: string
 }
 
 export interface PostMetadata {
