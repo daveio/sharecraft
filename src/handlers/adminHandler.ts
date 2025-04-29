@@ -50,7 +50,7 @@ admin.get("/", async (c) => {
 })
 
 // Serve add page
-admin.get("/add", async (c) => {
+admin.get("/add", async (_c) => {
   return new Response(renderHtmlTemplate("add.html.hbs"), {
     headers: { "Content-Type": "text/html" }
   })
