@@ -2,8 +2,8 @@ import { $ } from "bun";
 
 async function runDeploy() {
   try {
-    console.log("🏗️  Building templates...");
-    await $`bun run build:templates`;
+    console.log("🏗️  Bundling templates...");
+    await $`bun run bundle`;
 
     console.log("🚀 Deploying to Cloudflare...");
     await $`bun run wrangler deploy`;

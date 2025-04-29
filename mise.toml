@@ -6,6 +6,3 @@ env_file = '.env'
 
 [tools]
 bun = { version = '1.2.10' }
-
-[tasks]
-'setup-vale' = { run = 'mkdir -p $HOME/Library/Application\ Support/vale/styles/config/vocabularies/sharecraft && ln -s $PWD/.trunk/configs/vale-accept.txt $HOME/Library/Application\ Support/vale/styles/config/vocabularies/sharecraft/allow.txt && ln -s $PWD/.trunk/configs/vale-reject.txt $HOME/Library/Application\ Support/vale/styles/config/vocabularies/sharecraft/reject.txt' }

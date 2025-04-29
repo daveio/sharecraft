@@ -4,8 +4,8 @@ let devProcess: null | { kill: () => void; exited: Promise<number> } = null;
 
 async function runDev() {
   try {
-    console.log("🏗️  Building templates...");
-    await $`bun run build:templates`;
+    console.log("🏗️  Bundling templates...");
+    await $`bun run bundle`;
 
     console.log("🚀 Starting development server...");
     // Store the dev process so we can clean it up if needed
