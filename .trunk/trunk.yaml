@@ -18,18 +18,15 @@ runtimes:
 lint:
   disabled:
     - vale
-    - biome
     - semgrep
   ignore:
-    - linters:
-        - ALL
-      paths:
-        - worker.js
     - linters:
         - prettier
       paths:
         - "**/*.json"
+        - "**/*.ts"
   enabled:
+    - biome@1.9.4
     - dustilock@1.2.0
     - gitleaks@8.24.3
     - markdown-link-check@3.13.7

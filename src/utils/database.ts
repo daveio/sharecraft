@@ -1,6 +1,9 @@
-import { Env, PostMetadata } from "../types";
+import { Env, type PostMetadata } from "../types";
 
-export async function getMetadataForPage(path: string, db: D1Database): Promise<PostMetadata | null> {
+export async function getMetadataForPage(
+  path: string,
+  db: D1Database
+): Promise<PostMetadata | null> {
   try {
     // Query D1 database for post metadata
     const stmt = db.prepare("SELECT * FROM social_previews WHERE path = ?");

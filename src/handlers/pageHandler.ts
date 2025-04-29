@@ -1,4 +1,4 @@
-import { Env } from "../types";
+import type { Env } from "../types";
 import { checkForSocialCrawler } from "../utils/crawlerDetection";
 import { getMetadataForPage } from "../utils/database";
 import { replaceMetaTags } from "../utils/metaTags";

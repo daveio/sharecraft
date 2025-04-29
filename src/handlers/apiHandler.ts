@@ -1,5 +1,5 @@
-import { Env } from "../types";
 import { checkAuth } from "../middleware/auth";
+import type { Env } from "../types";
 import {
   handleCreatePostApi,
   handleDeletePostApi,

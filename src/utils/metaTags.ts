@@ -1,4 +1,4 @@
-import { PostMetadata } from "../types";
+import type { PostMetadata } from "../types";
 
 export function replaceMetaTags(html: string, metadata: PostMetadata): string {
   let modifiedHtml = html;
@@ -9,15 +9,15 @@ export function replaceMetaTags(html: string, metadata: PostMetadata): string {
   // Replace Open Graph tags
   modifiedHtml = modifiedHtml.replace(
     /<meta property="og:title"[^>]*>/g,
-    `<meta property="og:title" content="${metadata.title}">`,
+    `<meta property="og:title" content="${metadata.title}">`
   );
   modifiedHtml = modifiedHtml.replace(
     /<meta property="og:description"[^>]*>/g,
-    `<meta property="og:description" content="${metadata.description}">`,
+    `<meta property="og:description" content="${metadata.description}">`
   );
   modifiedHtml = modifiedHtml.replace(
     /<meta property="og:image"[^>]*>/g,
-    `<meta property="og:image" content="${imageUrl}">`,
+    `<meta property="og:image" content="${imageUrl}">`
   );
 
   // Add Twitter card tags if they don't exist
@@ -36,15 +36,15 @@ export function replaceMetaTags(html: string, metadata: PostMetadata): string {
     // Replace Twitter tags
     modifiedHtml = modifiedHtml.replace(
       /<meta name="twitter:title"[^>]*>/g,
-      `<meta name="twitter:title" content="${metadata.title}">`,
+      `<meta name="twitter:title" content="${metadata.title}">`
     );
     modifiedHtml = modifiedHtml.replace(
       /<meta name="twitter:description"[^>]*>/g,
-      `<meta name="twitter:description" content="${metadata.description}">`,
+      `<meta name="twitter:description" content="${metadata.description}">`
     );
     modifiedHtml = modifiedHtml.replace(
       /<meta name="twitter:image"[^>]*>/g,
-      `<meta name="twitter:image" content="${imageUrl}">`,
+      `<meta name="twitter:image" content="${imageUrl}">`
     );
   }
 

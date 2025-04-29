@@ -1,5 +1,5 @@
-import { Env } from "../types";
 import { checkAuth } from "../middleware/auth";
+import type { Env } from "../types";
 import { handleAdminLogin } from "../utils/auth";
 import { renderHtmlTemplate } from "../utils/templateLoader";
 
@@ -30,9 +30,11 @@ export async function handleAdminRequest(request: Request, env: Env): Promise<Re
   // Serve admin dashboard
   if (url.pathname === "/admin" || url.pathname === "/admin/") {
     // Get stats for the dashboard
-    const totalPagesStmt = await env.DB.prepare("SELECT COUNT(*) as count FROM social_previews").first<PageStats>();
+    const totalPagesStmt = await env.DB.prepare(
+      "SELECT COUNT(*) as count FROM social_previews"
+    ).first<PageStats>();
     const customPreviewsStmt = await env.DB.prepare(
-      "SELECT COUNT(*) as count FROM social_previews WHERE is_default = 0",
+      "SELECT COUNT(*) as count FROM social_previews WHERE is_default = 0"
     ).first<PageStats>();
 
     const variables = {

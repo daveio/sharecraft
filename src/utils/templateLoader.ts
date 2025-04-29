@@ -10,7 +10,11 @@ const templateCache = new Map<string, string>();
  */
 function loadTemplate(templatePath: string): string {
   if (templateCache.has(templatePath)) {
-    return templateCache.get(templatePath)!;
+    const cachedTemplate = templateCache.get(templatePath);
+    if (!cachedTemplate) {
+      throw new Error(`Template ${templatePath} not found in cache`);
+    }
+    return cachedTemplate;
   }
 
   const template = templates[templatePath];
@@ -29,18 +33,18 @@ function loadTemplate(templatePath: string): string {
  * @returns Rendered template
  */
 function renderTemplate(template: string, variables: Record<string, unknown> = {}): string {
-  return template.replace(/\{\{([^}]+)\}\}/g, (match, key) => {
-    key = key.trim();
-    if (key.startsWith("#if ")) {
-      const condition = key.slice(4);
+  return template.replace(/\{\{([^}]+)\}\}/g, (match, variableKey) => {
+    const trimmedKey = variableKey.trim();
+    if (trimmedKey.startsWith("#if ")) {
+      const condition = trimmedKey.slice(4);
       return variables[condition] ? "" : 'style="display: none;"';
     }
-    if (key.startsWith("#each ")) {
-      const arrayKey = key.slice(6);
+    if (trimmedKey.startsWith("#each ")) {
+      const arrayKey = trimmedKey.slice(6);
       const array = (variables[arrayKey] as unknown[]) || [];
       return array.map((item) => renderTemplate(match, item as Record<string, unknown>)).join("");
     }
-    return variables[key] !== undefined ? String(variables[key]) : match;
+    return variables[trimmedKey] !== undefined ? String(variables[trimmedKey]) : match;
   });
 }
 
@@ -50,7 +54,10 @@ function renderTemplate(template: string, variables: Record<string, unknown> = {
  * @param variables Variables to replace in the template
  * @returns Rendered template
  */
-export function renderHtmlTemplate(templatePath: string, variables: Record<string, unknown> = {}): string {
+export function renderHtmlTemplate(
+  templatePath: string,
+  variables: Record<string, unknown> = {}
+): string {
   const template = loadTemplate(templatePath);
   return renderTemplate(template, variables);
 }

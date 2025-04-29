@@ -1,10 +1,10 @@
 /// <reference types="@cloudflare/workers-types" />
 
-import { Env } from "./types";
 import { handleAdminRequest } from "./handlers/adminHandler";
 import { handleApiRequest } from "./handlers/apiHandler";
 import { handleImageRequest } from "./handlers/imageHandler";
 import { handlePageRequest } from "./handlers/pageHandler";
+import type { Env } from "./types";
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {

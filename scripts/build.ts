@@ -1,10 +1,10 @@
-import { join } from "path";
-import { readdir, readFile, writeFile } from "fs/promises";
+import { readFile, readdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 
 async function buildTemplates() {
   // Create templates object
   const templates: Record<string, string> = {};
-  const templatesDir = join(import.meta.dir, "src", "templates");
+  const templatesDir = join(import.meta.dir, "..", "src", "templates");
 
   try {
     // Read all .hbs files from templates directory
@@ -16,11 +16,11 @@ async function buildTemplates() {
       hbsFiles.map(async (file) => {
         const content = await readFile(join(templatesDir, file), "utf-8");
         templates[file] = content;
-      }),
+      })
     );
 
     // Create templates.ts in src/utils
-    const outputFile = join(import.meta.dir, "src", "utils", "templates.ts");
+    const outputFile = join(import.meta.dir, "..", "src", "utils", "templates.ts");
     const templateContent = `// This file is auto-generated. Do not edit manually.
 export const templates: Record<string, string> = ${JSON.stringify(templates, null, 2)};
 `;

@@ -1,4 +1,4 @@
-import { Env, PostMetadata } from "../types";
+import type { Env, PostMetadata } from "../types";
 
 interface CreatePostData {
   path: string;
@@ -61,7 +61,9 @@ export async function handleCreatePostApi(request: Request, env: Env): Promise<R
       VALUES (?, ?, ?, ?, ?)
     `);
 
-    await stmt.bind(data.path, data.title, data.description, data.image_url, data.is_default ? 1 : 0).run();
+    await stmt
+      .bind(data.path, data.title, data.description, data.image_url, data.is_default ? 1 : 0)
+      .run();
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { "Content-Type": "application/json" },
@@ -93,7 +95,16 @@ export async function handleUpdatePostApi(request: Request, env: Env): Promise<R
       WHERE id = ?
     `);
 
-    await stmt.bind(data.path, data.title, data.description, data.image_url, data.is_default ? 1 : 0, data.id).run();
+    await stmt
+      .bind(
+        data.path,
+        data.title,
+        data.description,
+        data.image_url,
+        data.is_default ? 1 : 0,
+        data.id
+      )
+      .run();
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { "Content-Type": "application/json" },
@@ -170,7 +181,7 @@ export async function handleImageUploadApi(request: Request, env: Env): Promise<
       }),
       {
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
   } catch (error) {
     return new Response(JSON.stringify({ error: (error as Error).message }), {

@@ -1,4 +1,4 @@
-import { Env } from "../types";
+import type { Env } from "../types";
 import { renderHtmlTemplate } from "./templateLoader";
 
 export async function handleAdminLogin(request: Request, env: Env): Promise<Response> {
@@ -26,11 +26,14 @@ export async function handleAdminLogin(request: Request, env: Env): Promise<Resp
           "Set-Cookie": `session=${sessionToken}; HttpOnly; Path=/; SameSite=Strict; Max-Age=86400`,
         },
       });
-    } else {
-      return new Response(renderHtmlTemplate("login.html.hbs", { errorMessage: "Invalid username or password" }), {
-        headers: { "Content-Type": "text/html" },
-      });
     }
+
+    return new Response(
+      renderHtmlTemplate("login.html.hbs", { errorMessage: "Invalid username or password" }),
+      {
+        headers: { "Content-Type": "text/html" },
+      }
+    );
   }
 
   // Show login form
