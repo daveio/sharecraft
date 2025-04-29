@@ -1,6 +1,7 @@
-import { renderHtmlTemplate } from "../utils/templateLoader";
+import { Env } from "../types";
+import { renderHtmlTemplate } from "./templateLoader";
 
-export async function handleAdminLogin(request, env) {
+export async function handleAdminLogin(request: Request, env: Env): Promise<Response> {
   if (request.method === "POST") {
     const formData = await request.formData();
     const username = formData.get("username");
@@ -36,4 +37,18 @@ export async function handleAdminLogin(request, env) {
   return new Response(renderHtmlTemplate("login.html.hbs"), {
     headers: { "Content-Type": "text/html" },
   });
+}
+
+export async function checkAuth(request: Request, env: Env): Promise<{ authenticated: boolean }> {
+  const cookie = request.headers.get("Cookie") || "";
+  const sessionMatch = cookie.match(/session=([^;]+)/);
+
+  if (!sessionMatch) {
+    return { authenticated: false };
+  }
+
+  const sessionToken = sessionMatch[1];
+  const sessionValid = await env.CONFIG.get(`session_${sessionToken}`);
+
+  return { authenticated: sessionValid === "valid" };
 }

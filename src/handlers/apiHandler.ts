@@ -1,3 +1,4 @@
+import { Env } from "../types";
 import { checkAuth } from "../middleware/auth";
 import {
   handleCreatePostApi,
@@ -7,7 +8,7 @@ import {
   handleUpdatePostApi,
 } from "../utils/apiUtils";
 
-export async function handleApiRequest(request, env) {
+export async function handleApiRequest(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
 
   // Check if logged in for API requests

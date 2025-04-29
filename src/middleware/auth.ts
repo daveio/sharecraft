@@ -1,4 +1,11 @@
-export async function checkAuth(request, env) {
+import { Env } from "../types";
+
+interface AuthResult {
+  authenticated: boolean;
+  sessionToken?: string;
+}
+
+export async function checkAuth(request: Request, env: Env): Promise<AuthResult> {
   // Extract session cookie
   const cookieHeader = request.headers.get("Cookie") || "";
   const sessionMatch = cookieHeader.match(/session=([^;]+)/);

@@ -1,4 +1,6 @@
-export function replaceMetaTags(html, metadata) {
+import { PostMetadata } from "../types";
+
+export function replaceMetaTags(html: string, metadata: PostMetadata): string {
   let modifiedHtml = html;
 
   // Generate full image URL

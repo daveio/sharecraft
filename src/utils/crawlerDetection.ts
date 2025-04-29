@@ -1,4 +1,4 @@
-export function checkForSocialCrawler(userAgent) {
+export function checkForSocialCrawler(userAgent: string): boolean {
   // Common social media crawler user agents
   const socialCrawlers = [
     "facebookexternalhit",

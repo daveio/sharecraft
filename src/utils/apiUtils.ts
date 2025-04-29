@@ -1,22 +1,40 @@
-export async function handleGetPostsApi(env) {
+import { Env, PostMetadata } from "../types";
+
+interface CreatePostData {
+  path: string;
+  title: string;
+  description: string;
+  image_url: string;
+  is_default?: boolean;
+}
+
+interface UpdatePostData extends CreatePostData {
+  id: number;
+}
+
+interface DeletePostData {
+  id: number;
+}
+
+export async function handleGetPostsApi(env: Env): Promise<Response> {
   try {
     const stmt = env.DB.prepare("SELECT * FROM social_previews ORDER BY id DESC");
-    const results = await stmt.all();
+    const results = await stmt.all<PostMetadata>();
 
     return new Response(JSON.stringify(results.results), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
   }
 }
 
-export async function handleCreatePostApi(request, env) {
+export async function handleCreatePostApi(request: Request, env: Env): Promise<Response> {
   try {
-    const data = await request.json();
+    const data = (await request.json()) as CreatePostData;
 
     // Validate required fields
     if (!data.path || !data.title || !data.description || !data.image_url) {
@@ -28,7 +46,7 @@ export async function handleCreatePostApi(request, env) {
 
     // Check if path already exists
     const checkStmt = env.DB.prepare("SELECT id FROM social_previews WHERE path = ?");
-    const existing = await checkStmt.bind(data.path).first();
+    const existing = await checkStmt.bind(data.path).first<{ id: number }>();
 
     if (existing) {
       return new Response(JSON.stringify({ error: "Path already exists" }), {
@@ -49,16 +67,16 @@ export async function handleCreatePostApi(request, env) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
   }
 }
 
-export async function handleUpdatePostApi(request, env) {
+export async function handleUpdatePostApi(request: Request, env: Env): Promise<Response> {
   try {
-    const data = await request.json();
+    const data = (await request.json()) as UpdatePostData;
 
     // Validate ID
     if (!data.id) {
@@ -81,16 +99,16 @@ export async function handleUpdatePostApi(request, env) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
   }
 }
 
-export async function handleDeletePostApi(request, env) {
+export async function handleDeletePostApi(request: Request, env: Env): Promise<Response> {
   try {
-    const data = await request.json();
+    const data = (await request.json()) as DeletePostData;
 
     // Validate ID
     if (!data.id) {
@@ -108,17 +126,17 @@ export async function handleDeletePostApi(request, env) {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });
   }
 }
 
-export async function handleImageUploadApi(request, env) {
+export async function handleImageUploadApi(request: Request, env: Env): Promise<Response> {
   try {
     const formData = await request.formData();
-    const file = formData.get("image");
+    const file = formData.get("image") as unknown;
 
     if (!file || !(file instanceof File)) {
       return new Response(JSON.stringify({ error: "No file uploaded" }), {
@@ -155,7 +173,7 @@ export async function handleImageUploadApi(request, env) {
       },
     );
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: (error as Error).message }), {
       status: 500,
       headers: { "Content-Type": "application/json" },
     });

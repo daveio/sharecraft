@@ -2,15 +2,27 @@
   "name": "sharecraft",
   "version": "1.0.0",
   "description": "Sharecraft - A Cloudflare Worker for creating social media previews for blog posts",
-  "main": "src/index.js",
+  "main": "src/index.ts",
   "scripts": {
-    "dev": "bun run wrangler dev",
-    "deploy": "bun run wrangler deploy"
+    "build:templates": "bun run scripts/build.ts",
+    "build": "bun run build:templates && wrangler build",
+    "dev": "bun run build:templates && wrangler dev",
+    "deploy": "bun run build:templates && wrangler deploy",
+    "check": "bun run tsc --noEmit",
+    "format": "bun run biome format . --write",
+    "lint": "bun run biome lint .",
+    "cleanup": "bun run scripts/cleanup-js.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@cloudflare/workers-types": "^4.20250429.0",
+    "@types/bun": "^1.2.10",
+    "@types/node": "^22.15.3",
+    "typescript": "^5.8.3",
     "wrangler": "^4.13.2"
   },
-  "packageManager": "pnpm@10.9.0",
-  "trustedDependencies": ["@biomejs/biome"]
+  "packageManager": "bun@1.2.10",
+  "trustedDependencies": [
+    "@biomejs/biome"
+  ]
 }

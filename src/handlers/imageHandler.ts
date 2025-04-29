@@ -1,4 +1,6 @@
-export async function handleImageRequest(request, env) {
+import { Env } from "../types";
+
+export async function handleImageRequest(request: Request, env: Env): Promise<Response> {
   try {
     const url = new URL(request.url);
     const imagePath = url.pathname.replace("/images/", "");
@@ -16,7 +18,7 @@ export async function handleImageRequest(request, env) {
     // Return the image with appropriate headers
     return new Response(data, {
       headers: {
-        "Content-Type": object.httpMetadata.contentType || "image/jpeg",
+        "Content-Type": object.httpMetadata?.contentType || "image/jpeg",
         "Cache-Control": "public, max-age=31536000",
         ETag: object.httpEtag,
       },

@@ -1,8 +1,19 @@
+import { Env } from "../types";
 import { checkAuth } from "../middleware/auth";
 import { handleAdminLogin } from "../utils/auth";
 import { renderHtmlTemplate } from "../utils/templateLoader";
 
-export async function handleAdminRequest(request, env) {
+interface PageStats {
+  count: number;
+}
+
+interface RecentPage {
+  url: string;
+  previewType: "Default" | "Custom";
+  lastModified: string;
+}
+
+export async function handleAdminRequest(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
 
   // Handle login/auth
@@ -19,14 +30,14 @@ export async function handleAdminRequest(request, env) {
   // Serve admin dashboard
   if (url.pathname === "/admin" || url.pathname === "/admin/") {
     // Get stats for the dashboard
-    const totalPagesStmt = await env.DB.prepare("SELECT COUNT(*) as count FROM social_previews").first();
+    const totalPagesStmt = await env.DB.prepare("SELECT COUNT(*) as count FROM social_previews").first<PageStats>();
     const customPreviewsStmt = await env.DB.prepare(
       "SELECT COUNT(*) as count FROM social_previews WHERE is_default = 0",
-    ).first();
+    ).first<PageStats>();
 
     const variables = {
-      totalPages: totalPagesStmt.count,
-      customPreviews: customPreviewsStmt.count,
+      totalPages: totalPagesStmt?.count ?? 0,
+      customPreviews: customPreviewsStmt?.count ?? 0,
       cacheHitRate: 95, // This could be calculated from actual metrics if available
       pages: await getRecentPages(env),
     };
@@ -70,7 +81,7 @@ export async function handleAdminRequest(request, env) {
   return new Response("Not found", { status: 404 });
 }
 
-async function getRecentPages(env) {
+async function getRecentPages(env: Env): Promise<RecentPage[]> {
   const stmt = env.DB.prepare(`
     SELECT path as url,
            CASE WHEN is_default = 1 THEN 'Default' ELSE 'Custom' END as previewType,
@@ -80,5 +91,6 @@ async function getRecentPages(env) {
     LIMIT 10
   `);
 
-  return await stmt.all();
+  const result = await stmt.all<RecentPage>();
+  return result.results ?? [];
 }

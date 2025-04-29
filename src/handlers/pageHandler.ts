@@ -1,8 +1,9 @@
+import { Env } from "../types";
 import { checkForSocialCrawler } from "../utils/crawlerDetection";
 import { getMetadataForPage } from "../utils/database";
 import { replaceMetaTags } from "../utils/metaTags";
 
-export async function handlePageRequest(request, env) {
+export async function handlePageRequest(request: Request, env: Env): Promise<Response> {
   // Get the original response from Notion
   const originalResponse = await fetch(request);
 
