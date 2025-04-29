@@ -31,6 +31,9 @@
     "parser": {
       "allowComments": false,
       "allowTrailingCommas": false
+    },
+    "formatter": {
+      "trailingCommas": "none"
     }
   },
   "linter": {

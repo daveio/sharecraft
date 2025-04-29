@@ -7,22 +7,22 @@
     {
       "binding": "DB",
       "database_name": "social_previews",
-      "database_id": "database_id",
-    },
+      "database_id": "database_id"
+    }
   ],
   "r2_buckets": [
     {
       "binding": "PREVIEW_IMAGES",
-      "bucket_name": "preview-images",
-    },
+      "bucket_name": "preview-images"
+    }
   ],
   "kv_namespaces": [
     {
       "binding": "CONFIG",
-      "id": "namespace_id",
-    },
+      "id": "namespace_id"
+    }
   ],
   "observability": {
-    "enabled": true,
-  },
+    "enabled": true
+  }
 }

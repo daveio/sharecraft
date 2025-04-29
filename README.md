@@ -163,15 +163,15 @@ JavaScript version:
 
 ```javascript
 function generateSecurePassword(length = 32) {
-  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let password = "";
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+  let password = ""
   for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    password += charset[randomIndex];
+    const randomIndex = Math.floor(Math.random() * charset.length)
+    password += charset[randomIndex]
   }
-  return password;
+  return password
 }
-console.log(generateSecurePassword(32));
+console.log(generateSecurePassword(32))
 ```
 
 Shell oneliner using [`**oven-sh/bun**`](https://github.com/oven-sh/bun) - you can use `node -e` if you're boring:
@@ -427,8 +427,8 @@ flowchart TB
 1. **Request Analysis**
 
 ```typescript
-const userAgent = request.headers.get("User-Agent") || "";
-const isSocialCrawler = checkForSocialCrawler(userAgent);
+const userAgent = request.headers.get("User-Agent") || ""
+const isSocialCrawler = checkForSocialCrawler(userAgent)
 ```
 
 - Intercepts incoming requests using Cloudflare Workers
@@ -438,8 +438,8 @@ const isSocialCrawler = checkForSocialCrawler(userAgent);
 2. **Original Response Handling**
 
 ```typescript
-const originalResponse = await fetch(request);
-const originalText = await originalResponse.text();
+const originalResponse = await fetch(request)
+const originalText = await originalResponse.text()
 ```
 
 - Uses Cloudflare's `fetch` API to get the original page
@@ -449,8 +449,8 @@ const originalText = await originalResponse.text();
 3. **Metadata Integration**
 
 ```typescript
-const metadata = await getMetadataForPage(path, env.DB);
-const modifiedHtml = replaceMetaTags(originalText, metadata);
+const metadata = await getMetadataForPage(path, env.DB)
+const modifiedHtml = replaceMetaTags(originalText, metadata)
 ```
 
 - Fetches custom metadata from D1 database
@@ -504,8 +504,8 @@ const modifiedHtml = replaceMetaTags(originalText, metadata);
 try {
   // Transformation logic
 } catch (error) {
-  console.error("Error handling page request:", error);
-  return originalResponse;
+  console.error("Error handling page request:", error)
+  return originalResponse
 }
 ```
 
@@ -517,8 +517,8 @@ try {
 
 ```typescript
 return new Response(modifiedHtml, {
-  headers: originalResponse.headers,
-});
+  headers: originalResponse.headers
+})
 ```
 
 - Preserves original response headers
@@ -547,31 +547,31 @@ return new Response(modifiedHtml, {
 **Fixed build script**:
 
 ```typescript
-import { $ } from "bun";
+import { $ } from "bun"
 
 async function runBuild() {
   try {
-    console.log("🏗️  Bundling templates...");
-    await $`bun run bundle`;
+    console.log("🏗️  Bundling templates...")
+    await $`bun run bundle`
 
-    console.log("📦 Building worker...");
+    console.log("📦 Building worker...")
     // Changed from 'bun run wrangler build' to avoid the infinite loop
-    await $`bun run wrangler deploy --dry-run --outdir=dist --no-bundle`;
+    await $`bun run wrangler deploy --dry-run --outdir=dist --no-bundle`
 
-    console.log("✅ Build completed successfully!");
+    console.log("✅ Build completed successfully!")
   } catch (error) {
-    console.error("❌ Build failed:", error instanceof Error ? error.message : error);
-    process.exit(1);
+    console.error("❌ Build failed:", error instanceof Error ? error.message : error)
+    process.exit(1)
   }
 }
 
 // Handle cleanup on interruption
 process.on("SIGINT", () => {
-  console.log("\n🛑 Build interrupted, cleaning up...");
-  process.exit(0);
-});
+  console.log("\n🛑 Build interrupted, cleaning up...")
+  process.exit(0)
+})
 
-await runBuild();
+await runBuild()
 ```
 
 ### Troubleshooting
@@ -848,11 +848,11 @@ flowchart LR
 
 ```typescript
 // Only fetch from origin when needed
-const originalResponse = await fetch(request);
+const originalResponse = await fetch(request)
 
 // Most requests pass straight through
 if (!isSocialCrawler) {
-  return originalResponse;
+  return originalResponse
 }
 ```
 
