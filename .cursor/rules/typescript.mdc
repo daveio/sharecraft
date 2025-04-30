@@ -1,5 +1,5 @@
 ---
-description: This document outlines best practices and coding standards for developing TypeScript applications. Following these guidelines will help ensure code quality, maintainability, and scalability.
+description: Best practices and coding standards for developing TypeScript applications.
 globs:
 alwaysApply: true
 ---

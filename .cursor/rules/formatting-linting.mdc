@@ -1,0 +1,53 @@
+---
+description: Details of how to format and lint with trunk and other tools.
+globs:
+alwaysApply: true
+---
+# Trunk
+
+- If `.trunk/trunk.yaml` exists, the repository is set up for `trunk` (https://trunk.io) and we should use it.
+  - We don't have to use it exclusively, but it should be the first thing to check.
+
+# Formatting
+
+- Use `trunk` for formatting if available, instead of individual formatters, unless you have reason to invoke the individual formatter.
+  - You can format files using `trunk fmt [filename]`.
+    - Add the `-a` parameter without a filename - for example `trunk fmt -a` - to format all files.
+
+# Linting
+
+- Use `trunk` for linting if available, instead of individual linters, unless you have reason to invoke the individual linter.
+  - You can check for issues using `trunk check [filename]`
+    - Add the `-a` parameter without a filename - for example `trunk check -a` - to scan all files.
+  - You can attempt an auto-fix with `trunk check --fix [filename]`
+    - Add the `-a` parameter without a filename - for example `trunk check --fix -a` - to scan all files.
+
+## If we are working with TypeScript (`*.{ts,tsx,cts,mts}` files)
+
+- Also lint with `tsc --noEmit`. `trunk` does not invoke this.
+  - If we're using the `bun` package manager, run `bun run tsc --noEmit`.
+  - If we're using the `pnpm` package manager, run `pnpm run tsc --noEmit`.
+  - If we're using another package manager, invoke it however that package manager runs commands.
+  - Don't just run `tsc --noEmit` outside the package manager.
+
+## If we are working with a Next.js project (`next.config.{js,mjs,cjs,ts,cts,mts}` exists)
+
+- Also lint with `next lint`. `trunk` does not invoke this.
+  - If we're using the `bun` package manager, run `bun run next lint`.
+  - If we're using the `pnpm` package manager, run `pnpm run next lint`.
+  - If we're using another package manager, invoke it however that package manager runs commands.
+  - Don't just run `next lint` outside the package manager.
+
+## When the `biome` linter is enabled in `.trunk/trunk.yaml`, or `biome.json` exists in the repository root
+
+- Also lint with `biome` directly, even if `trunk` invokes it.
+  - This is generally a good idea, as it has issues with `trunk` sometimes.
+  - Use `biome check [filename]` to scan a file.
+  - Use `biome check` without a filename to scan all files.
+- Sometimes `trunk` doesn't like to fix `biome` issues.
+  - You can invoke `biome check --write [filename]` to attempt safe fixes.
+    - Again, just do `biome check --write` without a filename to fix all files.
+  - You can add `--unsafe` with the `--write` parameter, ie `biome check --write --unsafe [filename]` to attempt unsafe fixes.
+    - Trunk will not attempt unsafe fixes. You need to invoke `biome` manually to try them.
+    - Again, omit the filename, just doing `biome check --write --unsafe` to scan and attempt to fix all files.
+    - Be careful with unsafe fixes. Validate them afterward to ensure functionality after the fix has parity with functionality before.

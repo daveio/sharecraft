@@ -7,5 +7,13 @@
   "go.alternateTools": {
     "go": "${workspaceFolder}/.vscode/mise-tools/go"
   },
-  "workbench.colorCustomizations": {}
+  "workbench.colorCustomizations": {},
+  "piny.project_settings": {
+    "open-pages": ["index.html"],
+    "tw-external-config": {
+      "external_source_url": null
+    },
+    "source-folders": null,
+    "preview-url": "http://localhost:3000"
+  }
 }
