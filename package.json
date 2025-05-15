@@ -28,5 +28,14 @@
     "@types/service-worker-mock": "^2.0.4"
   },
   "packageManager": "bun@1.2.13",
-  "trustedDependencies": ["@biomejs/biome", "esbuild", "sharp", "workerd"]
+  "trustedDependencies": [
+    "@biomejs/biome",
+    "esbuild",
+    "sharp",
+    "workerd"
+  ],
+  "engines": {
+    "bun": "~1.2.13",
+    "node": "~lts"
+  }
 }
