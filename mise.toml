@@ -6,5 +6,3 @@ env_file = '.env'
 
 [tools]
 bun = { version = '1.2.13' }
-
-# [tasks]
