@@ -24,7 +24,7 @@
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.2.11",
     "typescript": "^5.8.3",
-    "wrangler": "^4.14.0",
+    "wrangler": "^4.16.1",
     "@types/service-worker-mock": "^2.0.4"
   },
   "packageManager": "bun@1.2.13",
