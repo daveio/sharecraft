@@ -16,18 +16,18 @@
     "chanfana": "^2.8.0",
     "handlebars": "^4.7.8",
     "hono": "^4.7.8",
-    "zod": "^3.24.3"
+    "zod": "^3.25.28"
   },
   "devDependencies": {
-    "vitest": "~3.1.2",
+    "vitest": "~3.1.4",
     "@cloudflare/vitest-pool-workers": "^0.8.23",
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.2.11",
     "typescript": "^5.8.3",
-    "wrangler": "^4.14.0",
+    "wrangler": "^4.16.1",
     "@types/service-worker-mock": "^2.0.4"
   },
-  "packageManager": "bun@1.2.14",
+  "packageManager": "bun@1.2.13",
   "trustedDependencies": [
     "@biomejs/biome",
     "esbuild",
@@ -35,7 +35,7 @@
     "workerd"
   ],
   "engines": {
-    "bun": "~1.2.14",
+    "bun": "~1.2.13",
     "node": "~lts"
   }
 }
