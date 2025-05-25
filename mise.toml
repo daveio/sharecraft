@@ -5,4 +5,4 @@ SHARECRAFT_MISE_ACTIVE = 'true'
 env_file = '.env'
 
 [tools]
-bun = { version = '1.2.13' }
+bun = { version = '1.2.14' }

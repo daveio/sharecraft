@@ -27,7 +27,7 @@
     "wrangler": "^4.14.0",
     "@types/service-worker-mock": "^2.0.4"
   },
-  "packageManager": "bun@1.2.13",
+  "packageManager": "bun@1.2.14",
   "trustedDependencies": [
     "@biomejs/biome",
     "esbuild",
@@ -35,7 +35,7 @@
     "workerd"
   ],
   "engines": {
-    "bun": "~1.2.13",
+    "bun": "~1.2.14",
     "node": "~lts"
   }
 }
