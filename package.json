@@ -19,7 +19,7 @@
     "zod": "^3.24.3"
   },
   "devDependencies": {
-    "vitest": "~3.1.2",
+    "vitest": "~3.1.4",
     "@cloudflare/vitest-pool-workers": "^0.8.23",
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "^1.2.11",
