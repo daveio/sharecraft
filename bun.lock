@@ -8,7 +8,7 @@
         "chanfana": "^2.8.0",
         "handlebars": "^4.7.8",
         "hono": "^4.7.11",
-        "zod": "^3.25.51",
+        "zod": "^3.25.56",
       },
       "devDependencies": {
         "@biomejs/biome": "^1.9.4",
@@ -412,7 +412,7 @@
 
     "youch": ["youch@3.3.4", "", { "dependencies": { "cookie": "^0.7.1", "mustache": "^4.2.0", "stacktracey": "^2.1.8" } }, "sha512-UeVBXie8cA35DS6+nBkls68xaBBXCye0CNznrhszZjTbRVnJKQuNsyLKBTTL4ln1o1rh2PKtv35twV7irj5SEg=="],
 
-    "zod": ["zod@3.25.51", "", {}, "sha512-TQSnBldh+XSGL+opiSIq0575wvDPqu09AqWe1F7JhUMKY+M91/aGlK4MhpVNO7MgYfHcVCB1ffwAUTJzllKJqg=="],
+    "zod": ["zod@3.25.56", "", {}, "sha512-rd6eEF3BTNvQnR2e2wwolfTmUTnp70aUTqr0oaGbHifzC3BKJsoV+Gat8vxUMR1hwOKBs6El+qWehrHbCpW6SQ=="],
 
     "@cloudflare/vitest-pool-workers/zod": ["zod@3.25.50", "", {}, "sha512-VstOnRxf4tlSq0raIwbn0n+LA34SxVoZ8r3pkwSUM0jqNiA/HCMQEVjTuS5FZmHsge+9MDGTiAuHyml5T0um6A=="],
 
