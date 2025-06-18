@@ -15,16 +15,16 @@
     "@hono/zod-validator": "^0.7.0",
     "chanfana": "^2.8.0",
     "handlebars": "^4.7.8",
-    "hono": "^4.7.11",
+    "hono": "^4.8.0",
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "vitest": "~3.2.3",
-    "@cloudflare/vitest-pool-workers": "^0.8.38",
-    "@biomejs/biome": "^1.9.4",
+    "vitest": "~3.2.4",
+    "@cloudflare/vitest-pool-workers": "^0.8.39",
+    "@biomejs/biome": "^2.0.0",
     "@types/bun": "^1.2.16",
     "typescript": "^5.8.3",
-    "wrangler": "^4.20.0",
+    "wrangler": "^4.20.1",
     "@types/service-worker-mock": "^2.0.4"
   },
   "packageManager": "bun@1.2.13",
