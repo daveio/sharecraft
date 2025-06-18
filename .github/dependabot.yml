@@ -22,14 +22,3 @@ updates:
       all-dependencies:
         patterns:
           - "*"
-  - package-ecosystem: bun
-    directory: /
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 100
-    assignees:
-      - daveio
-    groups:
-      all-dependencies:
-        patterns:
-          - "*"
