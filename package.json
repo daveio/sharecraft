@@ -12,19 +12,19 @@
     "test": "bun run vitest"
   },
   "dependencies": {
-    "@hono/zod-validator": "^0.7.0",
-    "chanfana": "^2.8.0",
+    "@hono/zod-validator": "^0.7.2",
+    "chanfana": "^2.8.1",
     "handlebars": "^4.7.8",
-    "hono": "^4.8.0",
-    "zod": "^4.0.0"
+    "hono": "^4.8.5",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "vitest": "~3.2.4",
-    "@cloudflare/vitest-pool-workers": "^0.8.39",
-    "@biomejs/biome": "^2.0.0",
-    "@types/bun": "^1.2.16",
+    "@cloudflare/vitest-pool-workers": "^0.8.56",
+    "@biomejs/biome": "^2.1.2",
+    "@types/bun": "^1.2.19",
     "typescript": "^5.8.3",
-    "wrangler": "^4.20.1",
+    "wrangler": "^4.25.1",
     "@types/service-worker-mock": "^2.0.4"
   },
   "packageManager": "bun@1.2.13",
@@ -35,7 +35,7 @@
     "workerd"
   ],
   "engines": {
-    "bun": "~1.2.13",
-    "node": "~lts"
+    "bun": "^1.2.19",
+    "node": "^22.17.1"
   }
 }
