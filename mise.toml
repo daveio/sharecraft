@@ -5,5 +5,8 @@ SHARECRAFT_MISE_ACTIVE = 'true'
 env_file = '.env'
 
 [tools]
-bun = { version = '1.3.1' }
-node = { version = '25.1.0' }
+bun = { version = '1.3.7' }
+claude = { version = '2.1.22' }
+codex = { version = '0.92.0' }
+gemini = { version = '0.26.0' }
+node = { version = '24.13.0' }
